@@ -17,7 +17,7 @@ struct ServoStatusView: View {
         case .connecting:
             return .orange
         case .connected:
-            return .green
+            return WoodshopTheme.sage
         case .disconnected:
             return .red
         }
@@ -84,7 +84,13 @@ struct ServoStatusView: View {
             }
         }
         .padding(20)
-        .background(.regularMaterial)
+        .background(WoodshopTheme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-    }
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(
+                    WoodshopTheme.brass.opacity(0.35),
+                    lineWidth: 1
+                )
+        }    }
 }

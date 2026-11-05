@@ -19,22 +19,65 @@ struct ServoControlsView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Picker("Rotation Speed", selection: $selectedSpeed) {
-                Text("Slow").tag("slow")
-                Text("Medium").tag("medium")
-                Text("Fast").tag("fast")
+            VStack(alignment: .leading, spacing: 10) {
+                Text("ROTATION SPEED")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .tracking(2)
+                    .foregroundStyle(WoodshopTheme.brass)
+                HStack(spacing: 4) {
+                    ForEach(["slow", "medium", "fast"], id: \.self) { speed in
+                        Button {
+                            selectedSpeed = speed
+                        } label: {
+                            Text(speed.capitalized)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .background(
+                                    selectedSpeed == speed
+                                    ? WoodshopTheme.brass
+                                    : Color.clear
+                                )
+                                .foregroundStyle(
+                                    selectedSpeed == speed
+                                    ? WoodshopTheme.background
+                                    : WoodshopTheme.ivory
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(4)
+                .background(WoodshopTheme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            .pickerStyle(.segmented)
 
             HStack(spacing: 16) {
-                Button("↺ Counterclockwise", action: onCounterclockwise)
+                Button(action: onCounterclockwise) {
+                    Label("Counterclockwise", systemImage: "arrow.counterclockwise")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(WoodshopTheme.brass)
 
-                Button("Clockwise ↻", action: onClockwise)
+                Button(action: onClockwise) {
+                    Label("Clockwise", systemImage: "arrow.clockwise")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(WoodshopTheme.brass)
             }
 
-            Button("Stop Rotation", action: onStop)
-                .controlSize(.large)
-                .tint(.red)
+            Button(action: onStop) {
+                Label("Stop Rotation", systemImage: "stop.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color(red: 0.55, green: 0.24, blue: 0.20))
         }
         .disabled(!isConnected)
     }

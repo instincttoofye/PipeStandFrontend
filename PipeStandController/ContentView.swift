@@ -51,6 +51,10 @@ struct ContentView: View {
             }
         }
         .padding(40)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(WoodshopTheme.background)
+        .foregroundStyle(WoodshopTheme.ivory)
+        .preferredColorScheme(.dark)
     }
 }
 
