@@ -18,8 +18,11 @@ struct ContentView: View {
             Text("Pipe Stand Controller")
                 .font(.title)
             
-            ServoStatusView(status: controller.status)
-
+            ServoStatusView(
+                status: controller.status,
+                connectionState: controller.connectionState
+            )
+            
             ServoControlsView(
                 selectedSpeed: $selectedSpeed,
                 onClockwise: {
@@ -36,7 +39,8 @@ struct ContentView: View {
                     Task {
                         await controller.sendCommand("stop")
                     }
-                }
+                },
+                isConnected: controller.connectionState == .connected
             )
         }
         .task {

@@ -10,6 +10,29 @@ import SwiftUI
 
 struct ServoStatusView: View {
     let status: ServoStatus?
+    let connectionState: ConnectionState
+    
+    private var connectionColor: Color {
+        switch connectionState {
+        case .connecting:
+            return .orange
+        case .connected:
+            return .green
+        case .disconnected:
+            return .red
+        }
+    }
+
+    private var connectionLabel: String {
+        switch connectionState {
+        case .connecting:
+            return "Connecting..."
+        case .connected:
+            return "Connected"
+        case .disconnected:
+            return "Disconnected"
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -21,10 +44,10 @@ struct ServoStatusView: View {
 
                 HStack(spacing: 8) {
                     Circle()
-                        .fill(status?.isMoving == true ? .green : .gray)
+                        .fill(connectionColor)
                         .frame(width: 10, height: 10)
 
-                    Text(status?.isMoving == true ? "Rotating" : "Stopped")
+                    Text(connectionLabel)
                 }
             }
 
@@ -36,7 +59,7 @@ struct ServoStatusView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text(status?.direction ?? "Unknown")
+                    Text(status?.direction ?? "Unavailable")
                         .font(.title3)
                         .bold()
                 }
@@ -48,10 +71,16 @@ struct ServoStatusView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text(status?.speed ?? "Unknown")
+                    Text(status?.speed ?? "Unavailable")
                         .font(.title3)
                         .bold()
                 }
+            }
+
+            if connectionState == .connected {
+                Text(status?.isMoving == true ? "Motor: Rotating" : "Motor: Stopped")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(20)

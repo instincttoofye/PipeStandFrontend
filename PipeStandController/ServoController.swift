@@ -15,7 +15,7 @@ final class ServoController {
     private let baseURL = "http://10.0.0.9"
     
     private(set) var status: ServoStatus?
-    
+    private(set) var connectionState: ConnectionState = .connecting
 
     func sendCommand(_ command: String, speed: String = "slow") async {
         guard let url = URL(string: "\(baseURL)/rack/\(command)?speed=\(speed)") else {
@@ -40,7 +40,10 @@ final class ServoController {
         }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 2
+
+            let (data, response) = try await URLSession.shared.data(for: request)
 
             guard let response = response as? HTTPURLResponse,
                   response.statusCode == 200 else {
@@ -55,6 +58,12 @@ final class ServoController {
     }
     
     func refreshStatus() async {
-        status = await fetchStatus()
+        if let newStatus = await fetchStatus() {
+            status = newStatus
+            connectionState = .connected
+        } else {
+            status = nil
+            connectionState = .disconnected
+        }
     }
 }

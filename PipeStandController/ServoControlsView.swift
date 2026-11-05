@@ -14,6 +14,8 @@ struct ServoControlsView: View {
     let onClockwise: () -> Void
     let onCounterclockwise: () -> Void
     let onStop: () -> Void
+    
+    let isConnected: Bool
 
     var body: some View {
         VStack(spacing: 20) {
@@ -34,5 +36,6 @@ struct ServoControlsView: View {
                 .controlSize(.large)
                 .tint(.red)
         }
+        .disabled(!isConnected)
     }
 }
